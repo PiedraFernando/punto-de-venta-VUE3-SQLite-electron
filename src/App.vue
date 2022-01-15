@@ -6,6 +6,10 @@
   <router-view/>
 </template>
 
+<script>
+  require('./backend/server')
+</script>
+
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
