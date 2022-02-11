@@ -16,4 +16,24 @@ function deleteProduct(id){
   return knex('productos').where('id',id).del()
 }
 
-module.exports = {getAllProductos, setNewProduct, setProduct, deleteProduct}
+function searchProductByBarcode(data){
+  return knex('productos').where('codigoBarras',data)
+}
+
+function searchProductByCode(data){
+  return knex('productos').where('codigo','like','%'+data+'%')
+}
+
+function searchProductByName(data){
+  return knex('productos').where('nombre','like','%'+data+'%')
+}
+
+module.exports = {
+  getAllProductos, 
+  setNewProduct, 
+  setProduct, 
+  deleteProduct, 
+  searchProductByBarcode, 
+  searchProductByCode, 
+  searchProductByName
+}

@@ -8,6 +8,23 @@ router.get('/', async (req,res)=>{
   res.status(200).json({result})
 })
 
+router.get('/:data', async (req,res)=>{
+  const resultBarcode = await query.searchProductByBarcode(req.params.data)
+  if(resultBarcode.length){
+    result = resultBarcode
+  }else{
+    const resultCode = await query.searchProductByCode(req.params.data)
+    if(resultCode.length){
+      result = resultCode
+    }else{
+      const resultName = await query.searchProductByName(req.params.data)
+      result = resultName
+    }
+  }
+  console.log(result)
+  res.status(200).json({result})
+})
+
 //Registrar nueva pizza
 router.post('/', async (req, res)=>{
   const result = await query.setNewProduct(req)

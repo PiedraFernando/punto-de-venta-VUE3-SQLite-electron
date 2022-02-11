@@ -18,8 +18,13 @@
         <td>{{producto.precioVenta}}</td>
         <td>{{producto.cantidad}}</td>
         <td>
-          <componentButtonDelete @eliminar='eliminar(producto.id)' class="me-1"/>
-          <componentButtonModify @modificar='modificar(producto)'/>
+          <template v-if="select">
+            <componentButtonAdd @agregar='agregar(producto)'/>
+          </template>
+          <template v-else>
+            <componentButtonDelete @eliminar='eliminar(producto.id)' class="me-1"/>
+            <componentButtonModify @modificar='modificar(producto)'/>
+          </template>
         </td>
       </tr>
     </tbody>
@@ -29,17 +34,20 @@
 <script>
 import componentButtonDelete from './componentButtonDelete.vue'
 import componentButtonModify from './componentButtonModify.vue'
+import componentButtonAdd from './componentButtonAdd.vue'
 export default {
   name:'camponentTabalaProductos',
   components:{
     componentButtonDelete,
-    componentButtonModify
+    componentButtonModify,
+    componentButtonAdd
   },
   props:[
     'productos',
+    'select'
   ],
   methods:{
-    eliminar(id){
+    eliminar(id){ //elimina un producto
       if(confirm("¿Esta seguro de eliminar este producto?")){
         fetch("http://localhost:5000/api/productos/" + id,{
           method:'DELETE',
@@ -51,12 +59,16 @@ export default {
         .then(response => response.json())
         .then(() => {
           alert('Producto eliminado correctamente')
+          console.log('Producto eliminado')
           this.$emit('eliminado')
         });  
       }
     },
     modificar(producto){
       this.$emit('modificar',producto)
+    },
+    agregar(producto){
+      this.$emit('agregar',producto)
     }
   }
 }

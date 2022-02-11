@@ -8,6 +8,7 @@ app.use(cors())
 
 //routes
 app.use('/api/productos', require('./routes/producto'))
+app.use('/api/venta', require('./routes/venta'))
 
 app.listen(5000,()=>{
   console.log('Servidor express inicializado en el puerto 5000')

@@ -1,7 +1,6 @@
 <template>
-  <div>
-    <componentBarraBusqueda titulo="Almacen" nombre="Producto" @agregar='openModal'/>
-    <button @click="getAllProductos()">Prueba</button>
+  <div class="container mt-3">
+    <componentBarraBusqueda titulo="Almacen" nombre="Producto" opcion="Agregar" @agregar='openModal' @buscar="searchProduct"/>
     <componentModalProducto :producto="producto" @enviar='setNewProducto' :edit="edit" @update="updateProducto"/>
     <div class="container">
       <componentTableProductos :productos='productos' @eliminado='eliminado' @modificar='openModal'/>
@@ -26,6 +25,7 @@ export default {
   data(){
     return{
       producto: new Producto(),
+      modal: null,
       productos: null,
       mensajeModal: '',
       edit: false
@@ -34,16 +34,27 @@ export default {
   created(){
     this.getAllProductos()
   },
+  mounted(){
+    this.modal = new bootstrap.Modal(document.getElementById('componentBarraBusqueda'))  
+  },
   methods:{
-    getAllProductos(){
+    getAllProductos(){ //Obtiene todos los productos y carga en la tabla
       fetch("http://localhost:5000/api/productos")
         .then(response => response.json())
         .then(data => {
           this.productos = data.result
-          this.getAllProductos()
-        });
+          console.log('Se han cargado todos los productos')
+      });
     },
-    setNewProducto(){
+    searchProduct(data){
+      fetch("http://localhost:5000/api/productos/" + data)
+        .then(response => response.json())
+        .then(data => {
+          this.productos = data.result
+          console.log('Se han cargado los productos buscados')
+      });
+    },
+    setNewProducto(){ //Se registra nuevo producto
       fetch("http://localhost:5000/api/productos",{
         method:'POST',
         body: JSON.stringify(this.producto),
@@ -53,11 +64,15 @@ export default {
         }
       })
       .then(response => response.json())
-      .then(() => {
+      .then(data => {
+        console.log(data)
         alert('Producto agregado correctamente')
+        this.limpiarFormulario()
+        console.log('Producto nuevo registrado')
+        this.getAllProductos()
       });  
     },
-    updateProducto(id){
+    updateProducto(id){ //Se actualizo el un producto.
       fetch("http://localhost:5000/api/productos/" + id,{
         method:'PUT',
         body: JSON.stringify(this.producto),
@@ -67,24 +82,28 @@ export default {
         }
       })
       .then(response => response.json())
-      .then(() => {
+      .then((data) => {
+        console.log(data)
         alert('Producto modificado correctamente')
+        console.log('Producto modificado')
         this.getAllProductos()
-      }); 
+      });
     },
-    eliminado(){
+    eliminado(){ //actualiza los datos despues de eliminar el producto (funcionalidad en la tabla)
       this.getAllProductos()
     },
-    openModal(producto){
+    openModal(producto){ //Abre y cierra el modal
       if(producto){
         this.producto = producto
         this.edit = true
       }else{
-        this.producto = new Producto()
+        this.limpiarFormulario()
         this.edit = false
       }
-      var myModal = new bootstrap.Modal(document.getElementById('componentBarraBusqueda'))  
-      myModal.toggle()
+      this.modal.toggle()
+    },
+    limpiarFormulario(){
+      this.producto = new Producto()
     }
   },
 }

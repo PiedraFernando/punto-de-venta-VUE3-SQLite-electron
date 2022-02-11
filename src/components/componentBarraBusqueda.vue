@@ -1,10 +1,16 @@
 <template>
   <div class="row">
     <h3 class="col-lg-3 col-sm-12">{{titulo}}</h3>
-    <input type="text" v-model="nombreBuscar" :placeholder="'Buscar ' + nombre" class="col-lg-4 col-sm-12">
-    <button class="btn btn-primary col-lg-1 col-sm-12" @click="buscar">Buscar</button>
-    <div class="col-1"></div>
-    <button class="btn btn-success col-lg-3 col-sm-12" @click="agregar">Agregar {{nombre}}</button>
+    <template v-if="opcion">
+      <input type="text" v-model="nombreBuscar" @keyup.enter="buscar" :placeholder="'Buscar ' + nombre" class="col-lg-4 col-sm-12">
+      <button class="btn btn-primary col-lg-1 col-sm-12" @click="buscar">Buscar</button>
+      <div class="col-1"></div>
+      <button class="btn btn-success col-lg-3 col-sm-12" @click="agregar">{{opcion}} {{nombre}}</button>
+    </template>
+    <template v-else>
+      <input type="text" v-model="nombreBuscar" @keyup.enter="buscar" :placeholder="'Buscar ' + nombre" class="col-lg-7 col-sm-12">
+      <button class="btn btn-primary col-lg-1 col-sm-12" @click="buscar">Buscar</button>
+    </template>
   </div>
 </template>
 
@@ -19,7 +25,8 @@ export default {
   props:[
     'titulo',
     'nombre',
-    'extra'
+    'extra',
+    'opcion'
   ],
   methods: {
     agregar(){
@@ -27,6 +34,7 @@ export default {
     },
     buscar(){
       this.$emit("buscar",this.nombreBuscar)
+      this.nombreBuscar = ""
     },
     btnExtra(){
       this.$emit("extra")
