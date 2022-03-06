@@ -59,7 +59,6 @@ export default {
             this.productosBuscados[0].cantidad=1
             this.productos.push(this.productosBuscados[0])
           }else{
-            alert("No se encontro ningun resultado")
           }
       });
     },
@@ -75,15 +74,30 @@ export default {
       .then(response => response.json())
       .then(data => {
         console.log(data)
-        alert('Venta guardada correctamente')
-        console.log('Venta realizada')
         this.productos = []
+        this.getAllVentas()
       });
     },
     agregar(producto){
       this.modal.toggle()
       producto.cantidad = 1
       this.productos.push(producto)
+    },
+    getAllVentas(){
+      fetch("http://localhost:5000/api/venta",{
+        method:'GET',
+        headers:{
+          'Accept': 'application/json',
+          'Content-type': 'application/json',
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        console.log(data.result[23].fecha)
+        let fecha = new Date(parseInt(data.result[23].fecha))
+        console.log(fecha)
+      });
     }
   },
 }

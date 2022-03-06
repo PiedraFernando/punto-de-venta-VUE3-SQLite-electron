@@ -69,7 +69,7 @@ export default {
   name:"ModalProducto",
   props:[
     'producto',
-    'edit'
+    'edit',
   ],
   methods: {
     enviarProducto(){

@@ -1,9 +1,22 @@
 <template>
   <div class="container mt-3">
+    <componentModalConfirm @eliminado='eliminado'/>
     <componentBarraBusqueda titulo="Almacen" nombre="Producto" opcion="Agregar" @agregar='openModal' @buscar="searchProduct"/>
+    <div v-if="statusSaved == 'guardado'" class="alert alert-success mt-3 alert-dismissible fade show" role="alert">
+      Producto guardado correctamente.
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div v-if="statusSaved == 'modificado'" class="alert alert-success mt-3 alert-dismissible fade show" role="alert">
+      Producto guardado correctamente.
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div v-if="statusSaved == 'eliminado'" class="alert alert-success mt-3 alert-dismissible fade show" role="alert">
+      Producto eliminado correctamente.
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     <componentModalProducto :producto="producto" @enviar='setNewProducto' :edit="edit" @update="updateProducto"/>
     <div class="container">
-      <componentTableProductos :productos='productos' @eliminado='eliminado' @modificar='openModal'/>
+      <componentTableProductos :productos='productos' @eliminado='modalConfirm' @modificar='openModal'/>
     </div>
   </div>
 </template>
@@ -13,6 +26,7 @@ import Producto from '../class/Producto'
 import componentBarraBusqueda from '../components/componentBarraBusqueda.vue'
 import componentModalProducto from '../components/componentModalProducto.vue'
 import componentTableProductos from '../components/componentTableProductos.vue'
+import componentModalConfirm from '../components/componentModalConfirm.vue'
 import * as bootstrap from 'bootstrap'
 
 export default {
@@ -20,7 +34,8 @@ export default {
   components:{
     componentBarraBusqueda,
     componentModalProducto,
-    componentTableProductos
+    componentTableProductos,
+    componentModalConfirm,
   },
   data(){
     return{
@@ -28,14 +43,18 @@ export default {
       modal: null,
       productos: null,
       mensajeModal: '',
-      edit: false
+      edit: false,
+      statusSaved: false,
+      deleteConfirm: false,
+      id: 0,
     }
   },
   created(){
     this.getAllProductos()
   },
   mounted(){
-    this.modal = new bootstrap.Modal(document.getElementById('componentBarraBusqueda'))  
+    this.modal = new bootstrap.Modal(document.getElementById('componentBarraBusqueda')) ,
+    this.modalConfirmComponent = new bootstrap.Modal(document.getElementById('modalConfirm'))  
   },
   methods:{
     getAllProductos(){ //Obtiene todos los productos y carga en la tabla
@@ -43,7 +62,6 @@ export default {
         .then(response => response.json())
         .then(data => {
           this.productos = data.result
-          console.log('Se han cargado todos los productos')
       });
     },
     searchProduct(data){
@@ -51,7 +69,6 @@ export default {
         .then(response => response.json())
         .then(data => {
           this.productos = data.result
-          console.log('Se han cargado los productos buscados')
       });
     },
     setNewProducto(){ //Se registra nuevo producto
@@ -65,11 +82,10 @@ export default {
       })
       .then(response => response.json())
       .then(data => {
-        console.log(data)
-        alert('Producto agregado correctamente')
         this.limpiarFormulario()
-        console.log('Producto nuevo registrado')
         this.getAllProductos()
+        this.statusSaved = 'guardado'
+        this.modal.toggle()
       });  
     },
     updateProducto(id){ //Se actualizo el un producto.
@@ -83,16 +99,31 @@ export default {
       })
       .then(response => response.json())
       .then((data) => {
-        console.log(data)
-        alert('Producto modificado correctamente')
-        console.log('Producto modificado')
+        this.statusSaved = 'modificado'
         this.getAllProductos()
       });
     },
+    modalConfirm(id){
+      this.id = id
+      this.modalConfirmComponent.toggle()
+    },
     eliminado(){ //actualiza los datos despues de eliminar el producto (funcionalidad en la tabla)
-      this.getAllProductos()
+      fetch("http://localhost:5000/api/productos/" + this.id,{
+        method:'DELETE',
+        headers:{
+          'Accept': 'application/json',
+          'Content-type': 'application/json',
+        }
+      })
+      .then(response => response.json())
+      .then(() => {
+        this.modalConfirmComponent.toggle()
+        this.statusSaved = 'eliminado'
+        this.getAllProductos()
+      });  
     },
     openModal(producto){ //Abre y cierra el modal
+      this.statusSaved = false
       if(producto){
         this.producto = producto
         this.edit = true

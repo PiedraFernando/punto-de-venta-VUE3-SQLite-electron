@@ -48,21 +48,7 @@ export default {
   ],
   methods:{
     eliminar(id){ //elimina un producto
-      if(confirm("¿Esta seguro de eliminar este producto?")){
-        fetch("http://localhost:5000/api/productos/" + id,{
-          method:'DELETE',
-          headers:{
-            'Accept': 'application/json',
-            'Content-type': 'application/json',
-          }
-        })
-        .then(response => response.json())
-        .then(() => {
-          alert('Producto eliminado correctamente')
-          console.log('Producto eliminado')
-          this.$emit('eliminado')
-        });  
-      }
+      this.$emit('eliminado',id)
     },
     modificar(producto){
       this.$emit('modificar',producto)
