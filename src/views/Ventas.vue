@@ -75,7 +75,6 @@ export default {
       .then(data => {
         console.log(data)
         this.productos = []
-        this.getAllVentas()
       });
     },
     agregar(producto){
@@ -83,22 +82,6 @@ export default {
       producto.cantidad = 1
       this.productos.push(producto)
     },
-    getAllVentas(){
-      fetch("http://localhost:5000/api/venta",{
-        method:'GET',
-        headers:{
-          'Accept': 'application/json',
-          'Content-type': 'application/json',
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data)
-        console.log(data.result[23].fecha)
-        let fecha = new Date(parseInt(data.result[23].fecha))
-        console.log(fecha)
-      });
-    }
   },
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="container mt-3">
     <h1>Estadisiticas</h1>
-    <form @submit.prevent="calcularGanancias" class="row">
+    <form @submit.prevent="getVentasInRange" class="row">
       <div class="mb-3 col">
         <label for="fechainicio" class="form-label">Fecha inicio</label>
         <input v-model="fechaInicio" type="date" class="form-control">  
@@ -12,6 +12,9 @@
       </div>
       <input type="submit" name="Calcular" class="btn btn-primary">
     </form>
+    <div class="">
+      <h2>Ventas:{{this.totalVentas}}</h2>
+    </div>
     <table class="table">
       <thead>
         <tr>
@@ -28,7 +31,7 @@
           <th scope="col">{{venta.folio}}</th>
           <th scope="col">{{venta.nombre}}</th>
           <th scope="col">{{venta.cantidad}}</th>
-          <th scope="col">{{venta.precioVenta}}</th>
+          <th scope="col">{{venta.precioventa}}</th>
           <th scope="col">{{venta.subtotal}}</th>
           <th scope="col">{{new Date(parseInt(venta.fecha)).toDateString()}}</th>
         </tr>
@@ -45,12 +48,35 @@ export default {
       ventas: [],
       fechaInicio:'',
       fechaFin:'',
+      totalVentas: 0,
+      totalGanancias: 0,
     }
   },
   created(){
-    this.getAllVentas()
+    //this.getAllVentas();
   },
   methods:{
+    getVentasInRange(){
+      let data = {
+        fechaInicio: new Date(this.fechaInicio).getTime(),
+        fechaFin: new Date(this.fechaFin).getTime()
+      }
+      fetch("http://localhost:5000/api/venta/inRange",{
+        method:'POST',
+        body: JSON.stringify(data),
+        headers:{
+          'Accept': 'application/json',
+          'Content-type': 'application/json',
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        this.ventas = data.res
+        this.ventas.forEach((venta) =>{
+          this.totalVentas += venta.subtotal;
+        })
+      });
+    },
     getAllVentas(){
       fetch("http://localhost:5000/api/venta",{
         method:'GET',
@@ -64,10 +90,6 @@ export default {
         this.ventas = data.result
       });
     },
-    calcularGanancias(){
-      console.log(new Date(this.fechaInicio).getTime())
-      console.log(new Date(this.fechaFin).getTime())
-    }
   },
 }
 </script>
