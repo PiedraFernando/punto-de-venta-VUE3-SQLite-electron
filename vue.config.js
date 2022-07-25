@@ -1,6 +1,11 @@
 module.exports = {
   pluginOptions:{
     electronBuilder:{
+      builderOptions: {
+        win: {
+          icon: 'public/favicon.ico'
+        }
+      },
       nodeIntegration:true,
       builderOptions:{
         extraFiles:[
@@ -11,6 +16,11 @@ module.exports = {
   },
   pluginOptions: {
     electronBuilder: {
+      builderOptions: {
+        win: {
+          icon: 'public/favicon.ico'
+        }
+      },
       nodeIntegration:true,
       builderOptions:{
         extraFiles:[

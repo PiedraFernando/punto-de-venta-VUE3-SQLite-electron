@@ -1,6 +1,8 @@
 {
   "name": "punto-de-ventas",
   "version": "0.1.0",
+  "author": "OnlyKal - Fernando Piedra",
+  "description": "Punto de venta con vue y electron",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
