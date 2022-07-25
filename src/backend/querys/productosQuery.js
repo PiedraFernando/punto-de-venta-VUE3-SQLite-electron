@@ -20,16 +20,11 @@ function deleteProduct(id){
   return knex('productos').where('id',id).del()
 }
 
-function searchProductByBarcode(data){
-  return knex('productos').where('codigoBarras',data)
-}
-
-function searchProductByCode(data){
-  return knex('productos').where('codigo','like','%'+data+'%')
-}
-
-function searchProductByName(data){
-  return knex('productos').where('nombre','like','%'+data+'%')
+function search(data){
+  return knex('productos')
+    .where('nombre','like','%'+data+'%')
+    .orWhere('codigo','like','%'+data+'%')
+    .orWhere('codigoBarras',data)
 }
 
 module.exports = {
@@ -38,7 +33,5 @@ module.exports = {
   setNewProduct,
   setProduct,
   deleteProduct,
-  searchProductByBarcode,
-  searchProductByCode,
-  searchProductByName
+  search
 }

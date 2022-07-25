@@ -4,46 +4,59 @@ const query = require('../querys/productosQuery')
 
 //Obtener todos los productos
 router.get('/', async (req,res)=>{
-  const result = await query.getAllProductos()
-  res.status(200).json({result})
+  try {
+    const result = await query.getAllProductos()
+    res.status(200).json({result})
+  } catch (error) {
+    res.status(404).json(error)
+  }
 })
 
 //obtiene solo los productos con menor existencia que las otras
 router.get('/faltantes', async (req,res)=>{
-  const result = await query.getFaltantes()
-  res.status(200).json({result})
+  try {
+    const result = await query.getFaltantes()
+    res.status(200).json({result})
+  } catch (error) {
+    res.status(404).json(error)
+  }
 })
 
 router.get('/:data', async (req,res)=>{
-  const resultBarcode = await query.searchProductByBarcode(req.params.data)
-  if(resultBarcode.length){
-    result = resultBarcode
-  }else{
-    const resultCode = await query.searchProductByCode(req.params.data)
-    if(resultCode.length){
-      result = resultCode
-    }else{
-      const resultName = await query.searchProductByName(req.params.data)
-      result = resultName
-    }
+  try {
+    const result = await query.search(req.params.data)
+    res.status(200).json({result})
+  } catch (error) {
+    res.status(404).json(error)
   }
-  res.status(200).json({result})
 })
 
 //Registrar nuevo producto
 router.post('/', async (req, res)=>{
-  const result = await query.setNewProduct(req)
-  res.status(200).json({'Producto':"Producto agregado correctamente",'res':result})
+  try {
+    const result = await query.setNewProduct(req)
+    res.status(200).json({'Producto':"Producto agregado correctamente",'res':result})
+  } catch (error) {
+    res.status(404).json(error)
+  }
 })
 
 router.put('/:id', async (req, res)=>{
-  const result = await query.setProduct(req.params.id, req.body)
-  res.status(200).json({'Producto':"Producto Modificado correctamente",'res':result})
+  try {
+    const result = await query.setProduct(req.params.id, req.body)
+    res.status(200).json({'Producto':"Producto Modificado correctamente",'res':result})
+  } catch (error) {
+    res.status(404).json(error)
+  }
 })
 
 router.delete('/:id', async (req, res)=>{
-  const result = await query.deleteProduct(req.params.id)
-  res.status(200).json({'Producto':"Producto eliminado correctamente",'res':result})
+  try {
+    const result = await query.deleteProduct(req.params.id)
+    res.status(200).json({'Producto':"Producto eliminado correctamente",'res':result})
+  } catch (error) {
+    res.status(404).json(error)
+  }
 })
 
 //Exportación de las rutas como módulo
