@@ -4,11 +4,11 @@
     <form @submit.prevent="getVentasInRange" class="row">
       <div class="mb-3 col">
         <label for="fechainicio" class="form-label">Fecha inicio</label>
-        <input v-model="fechaInicio" type="date" class="form-control">  
+        <input v-model="fechaInicio" type="date" class="form-control">
       </div>
       <div class="mb-3 col">
         <label for="fechaFin" class="form-label">Fecha fin</label>
-        <input v-model="fechaFin" type="date" class="form-control">  
+        <input v-model="fechaFin" type="date" class="form-control">
       </div>
       <input type="submit" name="Calcular" class="btn btn-primary">
     </form>

@@ -35,7 +35,7 @@ export default {
     }
   },
   mounted(){
-    this.modal = new bootstrap.Modal(document.getElementById('componentModalProducto'))  
+    this.modal = new bootstrap.Modal(document.getElementById('componentModalProducto'))
   },
   computed:{
     calcularTotal(){
