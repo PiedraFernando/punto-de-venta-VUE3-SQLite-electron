@@ -4,7 +4,7 @@
     <componentModalProducto :producto="producto" @enviar='setNewProducto' :edit="edit" @update="updateProducto"/>
     <componentBarraBusqueda titulo="Almacen" nombre="Producto" @buscar="searchProduct">
       <button class="btn btn-success me-3" @click='openModal(null)'>Agregar</button>
-      <button class="btn btn-warning me-3" @click='faltantes'>Ver faltantes</button>
+      <button class="btn btn-warning me-3" @click='getFaltantes'>Ver faltantes</button>
     </componentBarraBusqueda>
     <componentAlert :type="alertType" :messaje="alertMessaje" />
     <div class="container">
@@ -54,24 +54,30 @@ export default {
   methods:{
     getAllProductos(){ //Obtiene todos los productos y carga en la tabla
       fetch("http://localhost:5000/api/productos")
-        .then(response => response.json())
-        .then(data => {
-          this.productos = data.result
-      });
+        .then(async response => {
+          if(response.status >= 200 && response.status < 300){
+            const data = await response.json()
+            this.productos = data?.result
+          }
+        });
     },
     getFaltantes(){ //Obtiene productos que tengan menos cantidad que la cantidad aviso
       fetch("http://localhost:5000/api/productos/faltantes")
-        .then(response => response.json())
-        .then(data => {
-          this.productos = data.result
-      });
+        .then(async response => {
+          if(response.status >= 200 && response.status < 300){
+            const data = await response.json()
+            this.productos = data?.result
+          }
+        });
     },
     searchProduct(data){
       fetch("http://localhost:5000/api/productos/" + data)
-        .then(response => response.json())
-        .then(data => {
-          this.productos = data.result
-      });
+        .then(async response => {
+          if(response.status >= 200 && response.status < 300){
+            const data = await response.json()
+            this.productos = data?.result
+          }
+        });
     },
     setNewProducto(){ //Se registra nuevo producto
       fetch("http://localhost:5000/api/productos",{
@@ -82,14 +88,15 @@ export default {
           'Content-type': 'application/json',
         }
       })
-      .then(response => response.json())
-      .then(data => {
-        this.limpiarFormulario()
-        this.getAllProductos()
-        this.alertType="success"
-        this.alertMessaje="Producto guardado correctamente"
-        this.modal.toggle()
-      });
+      .then(response => {
+        if(response.status >= 200 && response.status < 300){
+          this.limpiarFormulario()
+          this.getAllProductos()
+          this.alertType="success"
+          this.alertMessaje="Producto guardado correctamente"
+          this.modal.toggle()
+        }
+      })
     },
     updateProducto(id){ //Se actualizo un producto.
       fetch("http://localhost:5000/api/productos/" + id,{
@@ -100,13 +107,14 @@ export default {
           'Content-type': 'application/json',
         }
       })
-      .then(response => response.json())
-      .then((data) => {
-        this.alertType="success"
-        this.alertMessaje="Producto actualizado correctamente"
-        this.modal.toggle()
-        this.getAllProductos()
-      });
+      .then(response => {
+        if(response.status >= 200 && response.status < 300){
+          this.alertType="success"
+          this.alertMessaje="Producto actualizado correctamente"
+          this.modal.toggle()
+          this.getAllProductos()
+        }
+      })
     },
     modalConfirm(id){
       this.id = id
@@ -120,13 +128,14 @@ export default {
           'Content-type': 'application/json',
         }
       })
-      .then(response => response.json())
-      .then(() => {
-        this.modalConfirmComponent.toggle()
-        this.alertType="success"
-        this.alertMessaje="Producto eliminado correctamente"
-        this.getAllProductos()
-      });
+      .then(response => {
+        if(response.status >= 200 && response.status < 300){
+          this.modalConfirmComponent.toggle()
+          this.alertType="success"
+          this.alertMessaje="Producto eliminado correctamente"
+          this.getAllProductos()
+        }
+      })
     },
     openModal(producto){ //Abre y cierra el modal
       this.alertMessaje=""

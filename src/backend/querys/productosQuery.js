@@ -5,7 +5,7 @@ function getAllProductos(){
 }
 
 function getFaltantes(){
-  return knex('productos').where('cantidadAviso','>=', "cantidad")
+  return knex('productos').where('cantidad','<=', knex.ref("cantidadAviso"))
 }
 
 function setNewProduct(req){

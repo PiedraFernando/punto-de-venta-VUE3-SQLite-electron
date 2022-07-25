@@ -11,7 +11,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="producto of productos" :key="producto.id">
+      <tr v-for="producto of productos" :key="producto.id" :class="producto.cantidad <= producto.cantidadAviso ? 'table-danger' : ''">
         <td>{{producto.codigo}}</td>
         <td>{{producto.nombre}}</td>
         <td>{{producto.descripcion}}</td>
