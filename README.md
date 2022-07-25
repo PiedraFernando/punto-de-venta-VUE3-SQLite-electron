@@ -1,4 +1,4 @@
-# punto de ventas
+# Punto de ventas
 
 ## Description
 Sistema de punto de ventas sencillo, hecho con vue, electron, node y MySQL.
@@ -26,3 +26,11 @@ npm run electron:serve
 ```
 npm run electron:build
 ```
+
+# Descargar la versiones ejecutables.
+A continuación se mustran los links para descargar la veriones ejecutables.
+## Version portable.
+https://www.mediafire.com/file/9x9bleyeu2ou0f5/punto-de-ventas_portable.rar/file
+
+## Version instalable.
+https://www.mediafire.com/file/sk1ot16gtaj4hlo/punto-de-ventas_Setup_0.1.0.rar/file
