@@ -21,8 +21,6 @@ async function getAllVentas(req){
 }
 
 async function getVentasInRange(req){
-  console.log(req.body.fechaInicio)
-  console.log(req.body.fechaFin)
   return knex('ventas').where('fecha','>=',req.body.fechaInicio).andWhere('fecha','>=',req.body.fechaFin)
 }
 

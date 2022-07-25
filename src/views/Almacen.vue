@@ -1,20 +1,12 @@
 <template>
   <div class="container mt-3">
     <componentModalConfirm @eliminado='eliminado'/>
-    <componentBarraBusqueda titulo="Almacen" nombre="Producto" opcion="Agregar" @agregar='openModal' @buscar="searchProduct"/>
-    <div v-if="statusSaved == 'guardado'" class="alert alert-success mt-3 alert-dismissible fade show" role="alert">
-      Producto guardado correctamente.
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    <div v-if="statusSaved == 'modificado'" class="alert alert-success mt-3 alert-dismissible fade show" role="alert">
-      Producto guardado correctamente.
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    <div v-if="statusSaved == 'eliminado'" class="alert alert-success mt-3 alert-dismissible fade show" role="alert">
-      Producto eliminado correctamente.
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
     <componentModalProducto :producto="producto" @enviar='setNewProducto' :edit="edit" @update="updateProducto"/>
+    <componentBarraBusqueda titulo="Almacen" nombre="Producto" @buscar="searchProduct">
+      <button class="btn btn-success me-3" @click='openModal(null)'>Agregar</button>
+      <button class="btn btn-warning me-3" @click='faltantes'>Ver faltantes</button>
+    </componentBarraBusqueda>
+    <componentAlert :type="alertType" :messaje="alertMessaje" />
     <div class="container">
       <componentTableProductos :productos='productos' @eliminado='modalConfirm' @modificar='openModal'/>
     </div>
@@ -27,24 +19,27 @@ import componentBarraBusqueda from '../components/componentBarraBusqueda.vue'
 import componentModalProducto from '../components/componentModalProducto.vue'
 import componentTableProductos from '../components/componentTableProductos.vue'
 import componentModalConfirm from '../components/componentModalConfirm.vue'
+import componentAlert from '../components/componentAlert.vue'
 import * as bootstrap from 'bootstrap'
 
 export default {
   name: 'Almacen',
   components:{
     componentBarraBusqueda,
-    componentModalProducto,
     componentTableProductos,
+    componentModalProducto,
     componentModalConfirm,
+    componentAlert
   },
   data(){
     return{
+      alertMessaje:"",
+      alertType:"",
       producto: new Producto(),
       modal: null,
       productos: null,
       mensajeModal: '',
       edit: false,
-      statusSaved: false,
       deleteConfirm: false,
       id: 0,
     }
@@ -53,12 +48,19 @@ export default {
     this.getAllProductos()
   },
   mounted(){
-    this.modal = new bootstrap.Modal(document.getElementById('componentBarraBusqueda')) ,
-    this.modalConfirmComponent = new bootstrap.Modal(document.getElementById('modalConfirm'))  
+    this.modal = new bootstrap.Modal(document.getElementById('componentBarraBusqueda')),
+    this.modalConfirmComponent = new bootstrap.Modal(document.getElementById('modalConfirm'))
   },
   methods:{
     getAllProductos(){ //Obtiene todos los productos y carga en la tabla
       fetch("http://localhost:5000/api/productos")
+        .then(response => response.json())
+        .then(data => {
+          this.productos = data.result
+      });
+    },
+    getFaltantes(){ //Obtiene productos que tengan menos cantidad que la cantidad aviso
+      fetch("http://localhost:5000/api/productos/faltantes")
         .then(response => response.json())
         .then(data => {
           this.productos = data.result
@@ -84,11 +86,12 @@ export default {
       .then(data => {
         this.limpiarFormulario()
         this.getAllProductos()
-        this.statusSaved = 'guardado'
+        this.alertType="success"
+        this.alertMessaje="Producto guardado correctamente"
         this.modal.toggle()
-      });  
+      });
     },
-    updateProducto(id){ //Se actualizo el un producto.
+    updateProducto(id){ //Se actualizo un producto.
       fetch("http://localhost:5000/api/productos/" + id,{
         method:'PUT',
         body: JSON.stringify(this.producto),
@@ -99,7 +102,9 @@ export default {
       })
       .then(response => response.json())
       .then((data) => {
-        this.statusSaved = 'modificado'
+        this.alertType="success"
+        this.alertMessaje="Producto actualizado correctamente"
+        this.modal.toggle()
         this.getAllProductos()
       });
     },
@@ -118,12 +123,14 @@ export default {
       .then(response => response.json())
       .then(() => {
         this.modalConfirmComponent.toggle()
-        this.statusSaved = 'eliminado'
+        this.alertType="success"
+        this.alertMessaje="Producto eliminado correctamente"
         this.getAllProductos()
-      });  
+      });
     },
     openModal(producto){ //Abre y cierra el modal
-      this.statusSaved = false
+      this.alertMessaje=""
+      this.alertType=""
       if(producto){
         this.producto = producto
         this.edit = true

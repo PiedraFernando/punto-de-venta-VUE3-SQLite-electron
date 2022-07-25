@@ -1,5 +1,5 @@
 class Producto{
-  constructor(id, nombre, descripcion, precioCompra, precioVenta, codigo, codigoBarras, cantidad){
+  constructor(id, nombre, descripcion, precioCompra, precioVenta, codigo, codigoBarras, cantidad, cantidadAviso){
     this.id = id,
     this.nombre = nombre,
     this.descripcion = descripcion,
@@ -8,6 +8,7 @@ class Producto{
     this.codigo = codigo,
     this.codigoBarras = codigoBarras,
     this.cantidad = cantidad
+    this.cantidadAviso = cantidadAviso
   }
   limpiarProducto(){
     this.id = ''
@@ -18,6 +19,7 @@ class Producto{
     this.codigo = ''
     this.codigoBarras = ''
     this.cantidad = ''
+    this.cantidadAviso = ''
   }
   copiarProducto(producto){
     this.id = producto.id
@@ -28,6 +30,7 @@ class Producto{
     this.codigo = producto.codigo
     this.codigoBarras = producto.codigoBarras
     this.cantidad = producto.cantidad
+    this.cantidadAviso = producto.cantidadAviso
   }
 }
 

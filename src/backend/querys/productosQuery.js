@@ -4,6 +4,10 @@ function getAllProductos(){
   return knex('productos').select('*')
 }
 
+function getFaltantes(){
+  return knex('productos').where('cantidadAviso','>=', "cantidad")
+}
+
 function setNewProduct(req){
   return knex('productos').insert(req.body)
 }
@@ -29,11 +33,12 @@ function searchProductByName(data){
 }
 
 module.exports = {
-  getAllProductos, 
-  setNewProduct, 
-  setProduct, 
-  deleteProduct, 
-  searchProductByBarcode, 
-  searchProductByCode, 
+  getAllProductos,
+  getFaltantes,
+  setNewProduct,
+  setProduct,
+  deleteProduct,
+  searchProductByBarcode,
+  searchProductByCode,
   searchProductByName
 }

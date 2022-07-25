@@ -52,7 +52,6 @@ export default {
         .then(response => response.json())
         .then(data => {
           this.productosBuscados = data.result
-          console.log('Se han cargado los productos buscados')
           if(this.productosBuscados.length > 1){
             this.modal.toggle()
           }else if(this.productosBuscados.length == 1){
@@ -71,11 +70,7 @@ export default {
           'Content-type': 'application/json',
         }
       })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data)
-        this.productos = []
-      });
+      .then(response => this.productos = [])
     },
     agregar(producto){
       this.modal.toggle()

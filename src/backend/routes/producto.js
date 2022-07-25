@@ -8,6 +8,12 @@ router.get('/', async (req,res)=>{
   res.status(200).json({result})
 })
 
+//obtiene solo los productos con menor existencia que las otras
+router.get('/faltantes', async (req,res)=>{
+  const result = await query.getFaltantes()
+  res.status(200).json({result})
+})
+
 router.get('/:data', async (req,res)=>{
   const resultBarcode = await query.searchProductByBarcode(req.params.data)
   if(resultBarcode.length){
@@ -21,11 +27,10 @@ router.get('/:data', async (req,res)=>{
       result = resultName
     }
   }
-  console.log(result)
   res.status(200).json({result})
 })
 
-//Registrar nueva pizza
+//Registrar nuevo producto
 router.post('/', async (req, res)=>{
   const result = await query.setNewProduct(req)
   res.status(200).json({'Producto':"Producto agregado correctamente",'res':result})

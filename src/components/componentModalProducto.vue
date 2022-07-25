@@ -44,9 +44,19 @@
                 <input type="text" class="form-control" id="precioVenta" placeholder="El precio de venta del producto es:" v-model="producto.precioVenta">
               </div>
             </div>
-            <div class="mb-3">
-              <label for="cantidad" class="form-label">Cantidad Actual:</label>
-              <input type="text" class="form-control" id="cantidad" placeholder="Actualmente hay x productos:" v-model="producto.cantidad">
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <div class="mb-3">
+                <label for="cantidad" class="form-label">Cantidad Actual:</label>
+                <input type="text" class="form-control" id="cantidad" placeholder="Actualmente hay x productos:" v-model="producto.cantidad">
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="mb-3">
+                <label for="cantidad" class="form-label">Cantidad aviso:</label>
+                <input type="text" class="form-control" id="cantidad" placeholder="Cantidad de existencia:" v-model="producto.cantidadAviso">
+              </div>
             </div>
           </div>
         </div>

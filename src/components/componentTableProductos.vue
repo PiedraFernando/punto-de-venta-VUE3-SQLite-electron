@@ -28,7 +28,7 @@
         </td>
       </tr>
     </tbody>
-  </table>  
+  </table>
 </template>
 
 <script>
