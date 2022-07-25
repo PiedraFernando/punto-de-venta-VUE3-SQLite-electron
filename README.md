@@ -27,7 +27,12 @@ npm run electron:serve
 npm run electron:build
 ```
 
-# Descargar la versiones ejecutables.
+### Compiles and minifies for production for windows
+```
+npm run electron:build:win
+```
+
+# Descargar la versiones ejecutables. --No actual version
 A continuación se mustran los links para descargar la veriones ejecutables.
 ## Version portable.
 https://www.mediafire.com/file/9x9bleyeu2ou0f5/punto-de-ventas_portable.rar/file
